@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS for Admin Dashboard */
+        body {
+            background-color: #01060b;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .form-container {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <div class="container">
+            <h2>Add Student / Register</h2>
+            <form action="/register" method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <!-- Add Student Fields -->
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" class="form-control" id="age" name="age" required>
+                </div>
+                <div class="form-group">
+                    <label for="branch">Branch</label>
+                    <input type="text" class="form-control" id="branch" name="branch" required>
+                </div>
+                <div class="form-group">
+                    <label for="batch">Batch</label>
+                    <input type="text" class="form-control" id="batch" name="batch" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="container form-container">
+            <h2>All Students</h2>
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by name" onkeyup="searchTable()">
+        </div>
+        <div class="container">
+            
+            <table id="studentsTable" class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Branch</th>
+                        <th>Batch</th>
+                        <th>Strong Subject</th>
+                        <th>Sports Strength</th>
+                        <th>Student certificates</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% students.forEach(student => { %>
+                        <tr>
+                            <td><%= student.name %></td>
+                            <td><%= student.age %></td>
+                            <td><%= student.branch %></td>
+                            <td><%= student.batch %></td>
+                            <td>
+                                <% if (student.strongSubjects && student.strongSubjects.length > 0) { %>
+                                    <ul>
+                                        <% student.strongSubjects.forEach(subject => { %>
+                                            <li><%= subject %></li>
+                                        <% }); %>
+                                    </ul>
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (student.sportsStrengths && student.sportsStrengths.length > 0) { %>
+                                    <ul>
+                                        <% student.sportsStrengths.forEach(sport => { %>
+                                            <li><%= sport %></li>
+                                        <% }); %>
+                                    </ul>
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (student.certificates && student.certificates.length > 0) { %>
+                                    <ul>
+                                        <% student.certificates.forEach(certificate => { %>
+                                            <li><%= certificate %></li>
+                                        <% }); %>
+                                    </ul>
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Feedbacks</h2>
+        <% feedbacks.forEach(feedback => { %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= feedback.studentName %></h5>
+                    <p class="card-text"><%= feedback.feedbackText %></p>
+                    <p class="card-subtitle text-muted"><%= feedback.dateSubmitted.toDateString() %></p>
+                    <form action="/feedbacks/<%= feedback._id %>?_method=DELETE" method="POST">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <div class="container">
+        <h2>Add Activity</h2>
+        <form action="/activities" method="POST">
+            <div class="form-group">
+                <label for="activityName">Activity Name</label>
+                <input type="text" class="form-control" id="activityName" name="activityName" required>
+            </div>
+            <div class="form-group">
+                <label for="activityDescription">Activity Description</label>
+                <textarea class="form-control" id="activityDescription" name="activityDescription" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Activity</button>
+        </form>
+    </div>
+    <div class="container">
+        <h2>Activities</h2>
+        <% activities.forEach(activity => { %>
+            <div class="alert alert-primary" role="alert">
+                <h4 class="alert-heading"><%= activity.name %></h4>
+                <p><%= activity.description %></p>
+                <form action="/activities/<%= activity._id %>?_method=DELETE" method="POST">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        <% }); %>
+    </div>
+    <div class="container">
+        <form action="/logout" method="POST">
+            <button type="submit" class="btn btn-primary">Logout</button>
+        </form>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function searchTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

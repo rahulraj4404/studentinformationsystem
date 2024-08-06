@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --background-color: #839494;
+            --container-margin-top: 50px;
+            --heading-margin-bottom: 30px;
+            --info-margin-bottom: 20px;
+        }
+        
+        body {
+            background-color: var(--background-color);
+        }
+        
+        .container {
+            margin-top: var(--container-margin-top);
+        }
+        
+        .heading {
+            text-align: center;
+            margin-bottom: var(--heading-margin-bottom);
+        }
+        
+        .info {
+            margin-bottom: var(--info-margin-bottom);
+        }
+        
+        .info-color {
+            color: var(--primary-color);
+        }
+        
+        .col-md-2 {
+            background: white;
+            margin-left: 0px;
+            left: -200px;
+        }
+        
+        .col-md-6 {
+            margin-bottom: var(--heading-margin-bottom);
+        }
+        
+        form {
+            margin-bottom: var(--info-margin-bottom);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Dashboard</h1>
+        <div class="row">
+            <div class="col-md-2" style="background: white;margin-left: 0px;left: -200px;">
+                <!-- Personal Information -->
+                <h2>Personal Information</h2>
+                <% if (student) { %>
+                    <p>Name: <%= student.name %></p>
+                    <p>Age: <%= student.age %></p>
+                    <p>Branch: <%= student.branch %></p>
+                    <p>Batch: <%= student.batch %></p>
+                    <!-- Add more personal information fields here -->
+                <% } else { %>
+                    <p>No student data found.</p>
+                <% } %>
+            </div>
+            <div class="col-md-6">
+                <!-- Strong Subjects -->
+                <h2>Strong Subjects</h2>
+                <% if (student && student.strongSubjects && student.strongSubjects.length > 0) { %>
+                    <% student.strongSubjects.forEach(function(subject) { %>
+                        <p><%= subject.name %> - <%= subject.subperc %>%</p>
+                    <% }) %>
+                <% } else { %>
+                    <p>No strong subjects found.</p>
+                <% } %>
+            
+                <!-- Sports Strengths -->
+                <h2>Sports Strengths</h2>
+                <% if (student && student.sportsStrengths && student.sportsStrengths.length > 0) { %>
+                    <% student.sportsStrengths.forEach(function(sport) { %>
+                        <p><%= sport.name %> - <%= sport.sportper %>%</p>
+                    <% }) %>
+                <% } else { %>
+                    <p>No sports strengths found.</p>
+                <% } %>
+            </div>
+                <!-- Certificates -->
+                <h2>Certificates</h2>
+                <% if (student && student.certificates && student.certificates.length > 0) { %>
+                    <% student.certificates.forEach(function(certificate) { %>
+                        <p><%= certificate %></p>
+                    <% }) %>
+                <% } else { %>
+                    <p>No certificates found.</p>
+                <% } %>
+
+                <!-- Activities -->
+                <h2>Activities</h2>
+                <div class="container">
+                    <% if (activities && activities.length > 0) { %>
+                        <% activities.forEach(activity => { %>
+                            <div class="alert alert-primary" role="alert">
+                                <h4 class="alert-heading"><%= activity.name %></h4>
+                                <p><%= activity.description %></p>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p>No activities found.</p>
+                    <% } %>
+                </div>
+
+              <!-- Form for adding strong subjects -->
+                <form action="/addStrongSubject" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="strongSubjects">Strong Subjects</label>
+                        <input type="text" class="form-control" id="strongSubjects" name="strongSubjects" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subjectpercentage">Subject level</label>
+                        <input type="num" class="form-control" id="subjectpercentage" name="subjectpercentage">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Add Strong Subject</button>
+                    </div>
+                </form>
+
+                <form action="/addSportsStrength" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sportsStrengths">Sports Strengths</label>
+                        <input type="text" class="form-control" id="sportsStrengths" name="sportsStrengths">
+                    </div>
+                    <div class="form-group">
+                        <label for="sportpercentage">Sports level</label>
+                        <input type="text" class="form-control" id="sportpercentage" name="sportpercentage">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Add Sports Strength</button>
+                    </div>
+                </form>
+
+
+                
+                <!-- Form for submitting feedback -->
+                <form action="/submitFeedback" method="POST">
+                    <h2>Submit Feedback</h2>
+                    <div>
+                        <label for="studentName">Student Name:</label>
+                        <input type="text" id="studentName" name="studentName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackText">Feedback</label>
+                        <textarea class="form-control" id="feedbackText" name="feedbackText" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
